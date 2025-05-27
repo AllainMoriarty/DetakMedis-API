@@ -1,4 +1,3 @@
-# rag_service.py
 from sqlalchemy.orm import Session
 from app.services.embedding_service import embedding_service
 from app.services.llm_service import llm_service
@@ -7,7 +6,6 @@ from app.schemas.chat import ChatRequest, ChatResponse, ContextDocument
 from typing import List
 import logging
 
-# Setup basic logging jika belum ada di aplikasi Anda
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

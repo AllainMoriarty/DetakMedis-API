@@ -1,5 +1,4 @@
-# llm_service.py
-import re # Import modul regex
+import re 
 from langchain_ollama import OllamaLLM
 from langchain.prompts import PromptTemplate
 from langchain.schema.output_parser import StrOutputParser
@@ -11,7 +10,6 @@ class LLMService:
             model=settings.LLM_MODEL_NAME,
             base_url=settings.OLLAMA_BASE_URL
         )
-        # Gunakan prompt yang sudah Anda perbaiki atau versi terakhir yang Anda coba
         self.prompt_template = PromptTemplate.from_template(
             """Anda adalah 'Asisten DetakMedis', sebuah asisten AI kesehatan yang ramah dan membantu untuk platform DetakMedis.
 

@@ -48,9 +48,6 @@ class RetrievalService:
                 metadata={"id": doctor.id, "name": doctor.name, "distance": float(doctor.distance)}
             ))
 
-        # Sort all collected contexts by distance (optional, if you want overall best)
-        # contexts.sort(key=lambda x: x.metadata.get("distance", float('inf')))
-        # contexts = contexts[:top_k] # Then take top_k overall
         return contexts
 
 retrieval_service = RetrievalService()
