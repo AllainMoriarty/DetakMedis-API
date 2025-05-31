@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.services.embedding_service import embedding_service
 from app.services.llm_service import llm_service
+from app.services.aidoc_service import aidoc_service
 from app.services.retrieval_service import retrieval_service
 from app.schemas.chat import ChatRequest, ChatResponse, ContextDocument
 from typing import List
@@ -55,7 +56,7 @@ class RAGService:
         try:
             # llm_coroutine = llm_service.generate_response(question=chat_request.query, context=context_str)
             # logger.info(f"Type of llm_coroutine: {type(llm_coroutine)}")
-            answer = await llm_service.generate_response(question=chat_request.query, context=context_str)
+            answer = await aidoc_service.generate_response(question=chat_request.query, context=context_str)
             logger.info(f"Type of answer AFTER await: {type(answer)}")
             if not isinstance(answer, str): # Di sini kita MENGHARAPKAN string
                 logger.warning(f"LLM response (answer) is not a string, it's: {type(answer)}")

@@ -13,3 +13,4 @@ class Poli(Base):
     
     disease = relationship("Disease", foreign_keys="[Disease.poli_id]", back_populates="poli")
     doctor = relationship("Doctor", foreign_keys="[Doctor.poli_id]", back_populates="poli")
+    medical_image = relationship("MedicalImage", foreign_keys="[MedicalImage.poli_id]", back_populates="poli")

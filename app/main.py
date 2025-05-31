@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 import uvicorn
-from app.routers import auth, chat, poli, disease, doctor
+from app.routers import auth, chat, poli, disease, doctor, medical_image, diagnosis
 from app.core.database import engine, Base
-from app.models import user
+import app.models
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,6 +17,8 @@ app.include_router(chat.router)
 app.include_router(poli.router)
 app.include_router(disease.router)
 app.include_router(doctor.router)
+app.include_router(medical_image.router)
+app.include_router(diagnosis.router)
 
 @app.get("/")
 def read_root():

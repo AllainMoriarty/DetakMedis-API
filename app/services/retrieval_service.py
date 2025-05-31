@@ -14,7 +14,7 @@ class RetrievalService:
 
         # Retrieve from Poli
         poli_results = db.query(Poli.name, Poli.description, Poli.embedding.l2_distance(query_embedding).label("distance")) \
-            .order_by(Poli.embedding.l2_distance(query_embedding)).limit(top_k).all() 
+            .order_by(Poli.embedding.l2_distance(query_embedding)).limit(1).all() 
 
         for poli in poli_results:
             contexts.append(ContextDocument(
@@ -24,7 +24,7 @@ class RetrievalService:
             ))
         
         disease_results = db.query(Disease.id, Disease.name, Disease.description, Disease.symptoms, Disease.treatment, Disease.embedding.l2_distance(query_embedding).label("distance")) \
-            .order_by(Disease.embedding.l2_distance(query_embedding)).limit(top_k).all()
+            .order_by(Disease.embedding.l2_distance(query_embedding)).limit(1).all()
         
         for disease in disease_results:
             content =f"Penyakit: {disease.name}\nDeskripsi: {disease.description}\nGejala: {disease.symptoms}\nPengobatan: {disease.treatment}"

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from app.core.security import Base
+from app.core.database import Base
 
 class MedicalImage(Base):
     __tablename__ = "medical_images"
@@ -18,4 +18,4 @@ class MedicalImage(Base):
     poli = relationship("Poli", foreign_keys=[poli_id], back_populates="medical_image")
 
     # Relation to Diagnosis
-    diagnosis = relationship("Diagnosis", back_populates="medical_image", uselist=False)
+    diagnosis = relationship("Diagnosis", uselist=False,  back_populates="medical_image")

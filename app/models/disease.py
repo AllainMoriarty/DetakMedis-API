@@ -16,3 +16,6 @@ class Disease(Base):
 
     # Relation to Poli
     poli = relationship("Poli", foreign_keys=[poli_id], back_populates="disease")
+
+    # Relation to Diagnosis
+    diagnosis = relationship("Diagnosis", foreign_keys="[Diagnosis.disease_id]", back_populates="disease")
