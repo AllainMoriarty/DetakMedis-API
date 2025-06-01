@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List
 from app.core.database import get_db
-from app.services.doctor import get_doctor, get_doctors, create_doctor, update_doctor, delete_doctor
+from app.services.doctor import get_doctor, get_doctors, get_doctors_by_poli_id, create_doctor, update_doctor, delete_doctor
 from app.schemas.doctor import DoctorCreate, DoctorUpdate, DoctorResponse
 
 router = APIRouter(prefix="/doctor", tags=["doctor"])
@@ -22,6 +22,20 @@ def get_by_id(doctor_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Doctor not found")
     
     return doctor
+
+@router.get("/poli/{poli_id}", response_model=List[DoctorResponse])
+def get_by_poli_id(poli_id: int, db: Session = Depends(get_db)):
+    """
+    Get all doctors by poli_id
+    """
+    doctors = get_doctors_by_poli_id(db, poli_id)
+    if not doctors:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"No doctors found for poli_id: {poli_id}"
+        )
+    
+    return doctors
 
 @router.put("/{doctor_id}", response_model=DoctorResponse)
 async def update(doctor_id: int, doctor: DoctorUpdate, db: Session = Depends(get_db)):

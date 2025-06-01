@@ -11,6 +11,12 @@ def get_doctor(db: Session, doctor_id: int) -> Optional[DoctorResponse]:
 def get_doctors(db: Session) -> List[DoctorResponse]:
     return db.query(Doctor).all()
 
+def get_doctors_by_poli_id(db: Session, poli_id: int) -> List[DoctorResponse]:
+    """
+    Get all doctors by poli_id
+    """
+    return db.query(Doctor).filter(Doctor.poli_id == poli_id).all()
+
 async def create_doctor(db: Session, doctor_data: DoctorCreate) -> DoctorResponse:
     combined_text = f"{doctor_data.name} {doctor_data.speciality or ''} {doctor_data.profile or ''}".strip()
     embedding = await embedding_service.get_embedding(combined_text)
