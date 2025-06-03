@@ -55,7 +55,7 @@ async def update_doctor(db: Session, doctor_id: int, doctor_update: DoctorUpdate
         embedding = await embedding_service.get_embedding(combined_text)
         update_data["embedding"] = embedding
         
-    for field, value in update_doctor.items():
+    for field, value in update_data.items():
         setattr(db_doctor, field, value)
 
     db.commit()

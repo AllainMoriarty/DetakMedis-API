@@ -39,7 +39,7 @@ async def update_poli(db: Session, poli_id: int, poli_update: PoliUpdate) -> Opt
         embedding = await embedding_service.get_embedding(combined_text)
         update_data["embedding"] = embedding
         
-    for field, value in update_poli.items():
+    for field, value in update_data.items():
         setattr(db_poli, field, value)
 
     db.commit()

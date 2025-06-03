@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import create_access_token, get_current_user
-from app.services.user import authenticate_user, create_user
+from app.services.user import authenticate_user, create_user, get_all_patient
 from app.schemas.user import UserCreate, Token, UserResponse, UserLogin
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -36,3 +36,7 @@ def logout(response: Response, current_user: UserResponse= Depends(get_current_u
 @router.get("/me", response_model=UserResponse)
 def read_current_user(current_user: UserResponse = Depends(get_current_user)):
     return current_user
+
+@router.get("/patient")
+def get_patients(db: Session = Depends(get_db)):
+    return get_all_patient(db)

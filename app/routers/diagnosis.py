@@ -17,7 +17,6 @@ router = APIRouter(
 
 logger = logging.getLogger(__name__)
 
-# CREATE - KODE ASLI TIDAK DIUBAH
 @router.post("/", response_model=Diagnosis, status_code=status.HTTP_201_CREATED)
 async def create_diagnoses(image_file: Annotated[UploadFile, File(description="The medical image file to upload.")],
                               query: str = Form(...), db: Session = Depends(get_db),
@@ -40,23 +39,22 @@ async def create_diagnoses(image_file: Annotated[UploadFile, File(description="T
         logger.exception("Failed to create medical image in service.")
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
 
-# READ ALL - Consistent with create response format
 @router.get("/", response_model=List[Diagnosis])
-def get_all_diagnoses(
+async def get_all_diagnoses(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db)
 ):
     """Get all diagnoses (NO LOGIN REQUIRED - FOR TESTING)"""
     try:
-        return diagnosis_service.get_all_diagnosis(db, skip=skip, limit=limit)
+        diagnoses = await diagnosis_service.get_all_diagnosis(db, skip=skip, limit=limit)
+        return diagnoses
     except Exception as e:
         logger.exception("Failed to get diagnoses.")
         raise HTTPException(status_code=500, detail=f"Failed to get diagnoses: {str(e)}")
 
-# READ BY PATIENT ID - Consistent with create response format
 @router.get("/patient/{patient_id}", response_model=List[Diagnosis])
-def get_all_diagnoses_by_patient_id(
+async def get_all_diagnoses_by_patient_id(
     patient_id: int,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -64,7 +62,8 @@ def get_all_diagnoses_by_patient_id(
 ):
     """Get all diagnoses for specific patient (NO LOGIN REQUIRED)"""
     try:
-        return diagnosis_service.get_all_diagnosis_by_patient_id(db, patient_id=patient_id, skip=skip, limit=limit)
+        diagnoses = await diagnosis_service.get_all_diagnosis_by_patient_id(db, patient_id=patient_id, skip=skip, limit=limit)
+        return diagnoses
     except Exception as e:
         logger.exception(f"Failed to get diagnoses for patient {patient_id}.")
         raise HTTPException(status_code=500, detail=f"Failed to get patient diagnoses: {str(e)}")
@@ -84,7 +83,6 @@ def get_diagnoses(
         logger.exception(f"Failed to get diagnosis {diagnosis_id}.")
         raise HTTPException(status_code=500, detail=f"Failed to get diagnosis: {str(e)}")
 
-# UPDATE - Now supports image upload like create
 @router.put("/{diagnosis_id}", response_model=Diagnosis)
 async def update_diagnoses(
     diagnosis_id: int,
@@ -95,11 +93,9 @@ async def update_diagnoses(
 ):
     """Update existing diagnosis with optional new image"""
     try:
-        # Validate image type if provided
         if image_file and image_file.content_type not in ["image/jpeg", "image/png", "image/webp", "image/dicom", "application/dicom"]:
             raise HTTPException(status_code=400, detail="Invalid image type. Allowed: JPEG, PNG, WEBP, DICOM.")
         
-        # Create update data
         diagnosis_update = DiagnosisUpdate(query=query)
         
         return await diagnosis_service.update_diagnosis(

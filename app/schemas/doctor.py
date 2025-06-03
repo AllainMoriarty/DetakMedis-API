@@ -20,7 +20,6 @@ class DoctorUpdate(BaseModel):
     contact_info: Optional[str] = None
     location: Optional[str] = None
     practice_schedule: Optional[Dict[str, Any]] = None
-    poli_id: Optional[int] = None
 
 class DoctorResponse(DoctorBase):
     id: int

@@ -72,7 +72,6 @@ class MedicalImageService:
         except Exception as e:
             logger.error(f"Error during prediction for {unique_filename}: {e}. Will use user label if available.")
         
-        # --- INTI VALIDASI LABEL (Harus Tetap Ada) ---
         if final_label_for_db is None:
             logger.error(f"Critical: Label for {unique_filename} is None. Cannot save to database.")
             if os.path.exists(file_path):
@@ -185,7 +184,7 @@ class MedicalImageService:
                     logger.info(f"Prediction failed or no clear result for updated image {unique_filename}. Using existing label.")
                 else:
                     logger.warning(f"Prediction failed/ambiguous for updated image {unique_filename}. Keeping existing label.")
-                    final_label_for_db = db_image.label  # Gunakan label yang ada jika prediksi gagal
+                    final_label_for_db = db_image.label  
         except Exception as e:
             logger.error(f"Error during prediction for updated image {unique_filename}: {e}. Will keep existing label.")
             final_label_for_db = db_image.label  # Gunakan label yang ada jika prediksi error
@@ -242,12 +241,12 @@ class MedicalImageService:
         db_image = self.get_medical_image(db=db, image_id=image_id)
         if db_image:
             # Optional: Hapus file fisik dari server
-            # if os.path.exists(db_image.path):
-            #     try:
-            #         os.remove(db_image.path)
-            #         logger.info(f"Successfully deleted image file: {db_image.path}")
-            #     except OSError as e:
-            #         logger.error(f"Error deleting file {db_image.path}: {e}")
+            if os.path.exists(db_image.path):
+                try:
+                    os.remove(db_image.path)
+                    logger.info(f"Successfully deleted image file: {db_image.path}")
+                except OSError as e:
+                    logger.error(f"Error deleting file {db_image.path}: {e}")
             db.delete(db_image)
             db.commit()
         return db_image

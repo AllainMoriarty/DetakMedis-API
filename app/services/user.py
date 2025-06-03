@@ -7,6 +7,9 @@ from fastapi import HTTPException, status
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
+def get_all_patient(db: Session):
+    return db.query(User).filter(User.role == 'patient').all()
+
 def create_user(db: Session, user: UserCreate):
     # Check if email already exists
     existing_email = get_user_by_email(db, user.email)

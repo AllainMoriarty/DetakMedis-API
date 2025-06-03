@@ -3,6 +3,8 @@ venv/
 
 scripts/
 
+images/
+
 # Python cache files and folders
 **/__pycache__/
 *.pyc
